@@ -1,55 +1,44 @@
-
-require 'rspec'
 require 'bowling_score'
+require 'rspec'
 
-describe "BowlingScore" do
-  before (:each) do
-    @game = BowlingScore.new
+describe BowlingGame do
+
+  before(:each) do
+    @game = BowlingGame.new
   end
-  it 'can create a game' do
-    expect(@game).to be_truthy
-  end
-  it 'has a beginning score of zero' do
-    expect(@game.score).to eq 0
-  end
+
   it 'can roll a gutter game' do
-    20.times{@game.roll(0)}
+    20.times{ @game.roll 0}
     expect(@game.score).to eq 0
   end
-  it "scores a open frame" do
-    @game.roll(2)
-    @game.roll(4)
-    expect(@game.score).to eq 6
+
+  it "scores all ones" do
+    20.times { @game.roll 1}
+    expect(@game.score).to eq 20
   end
-  it 'scores a spare' do
-    @game.roll(5)
-    @game.roll(5)
-    @game.roll(3)
-    @game.roll(0)
-    expect(@game.score).to eq 16
+
+  it "scores a spare" do
+    2.times {@game.roll 5}
+    18.times {@game.roll 1}
+    expect(@game.score).to eq 29
   end
-  it 'scores two spares' do
-    @game.roll(5)
-    @game.roll(5)
-    @game.roll(3)
-    @game.roll(7)
-    @game.roll(1)
-    @game.roll(0)
-    expect(@game.score).to eq 25
+
+  it "scores two spares" do
+    2.times {@game.roll 5}
+    2.times {@game.roll 5}
+    16.times {@game.roll 1}
+    expect(@game.score).to eq 42
   end
-  it 'can score no spare plus a spare' do
-    @game.roll(0)
-    @game.roll(2)
-    @game.roll(5)
-    @game.roll(5)
-    @game.roll(6)
-    @game.roll(0)
-    expect(@game.score).to eq 24
+
+  it "scores a strike" do
+    @game.roll 10
+    18.times {@game.roll 1}
+    expect(@game.score).to eq 30
   end
-  it 'scores a strike and an open frame' do
-    @game.roll(10)
-    @game.roll(2)
-    @game.roll(2)
-    expect(@game.score).to eq 18
+
+  it "scores a perfect game" do
+    10.times { @game.roll 10 }
+    2.times { @game.roll 10}
+    expect(@game.score).to eq 300
   end
 end

@@ -1,44 +1,48 @@
-
-
-class BowlingScore
-
+class BowlingGame
   def initialize
-    @roll = []
+    @rolls = []
+  end
+
+  def roll count
+    puts "roll: ", count
+    @rolls << count
+    @rolls << 0 if count == 10 && @rolls.size % 2 == 1
+    puts "rolls: ", @rolls.inspect
   end
 
   def score
-    score = @roll.sum
+    score = 0
     frames.each_with_index do |frame, frame_index|
-      if strike? (frame)
-        first_bonus_ball_index = (2 * frame_index) + 2
-        second_bonus_ball_index = (2 * frame_index) + 3
-        score += @roll[first_bonus_ball_index] + @roll[second_bonus_ball_index]
-      elsif spare?(frame)
-        bonus_ball_index = (2 * frame_index) + 2
-        score += @roll[bonus_ball_index]
+      if spare? frame
+        score += spare_bonus(frame_index)
+      elsif strike? frame
+        score += strike_bonus(frame_index)
+      else
+        score += frame.sum
       end
     end
     score
   end
 
-  def frames
-    @roll.each_slice(2).to_a
+  def spare_bonus(frame_index)
+    bonus_frame = frames[frame_index + 1]
+    bonus_frame[0]
   end
 
-  def strike?(frame)
+  def strike_bonus(frame_index)
+    bonus_frame = frames[frame_index + 1]
+    bonus_frame.sum
+  end
+
+  def strike? frame
     frame[0] == 10
   end
 
-  def spare?(frame)
-    frame[0] && frame[1] && frame[0] + frame[1] == 10
+  def spare? frame
+    frame.sum == 10 && frame[0] != 10
   end
 
-  def roll(pins)
-    @roll << pins
-    if pins == 10
-      @roll << 0
-    end
+  def frames
+    @rolls.each_slice(2).to_a
   end
-
 end
-
