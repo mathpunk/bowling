@@ -11,18 +11,17 @@ class Bowling
     score = 0
     roll_index = 0
     (0...10).each do | _ |
+      score += frame_score(roll_index)
       if strike? roll_index
-        score += score_frame(roll_index)
         roll_index += 1
       else
-        score += score_frame(roll_index)
         roll_index += 2
       end
     end
     score
   end
 
-  def score_frame roll_index
+  def frame_score roll_index
     if spare?(roll_index) || strike?(roll_index)
       @rolls[roll_index] + @rolls[roll_index + 1] + @rolls[roll_index + 2]
     else
@@ -37,4 +36,5 @@ class Bowling
   def spare? roll_index
     @rolls[roll_index] + @rolls[roll_index + 1] == 10
   end
+
 end
