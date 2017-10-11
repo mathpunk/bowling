@@ -1,6 +1,3 @@
-require 'pry'
-require 'pry-byebug'
-
 class Bowling
   def initialize
     @rolls = []
@@ -8,47 +5,36 @@ class Bowling
 
   def roll count
     @rolls << count
-    @rolls << 0 if count == 10 && frames.last.size == 1 && !ending_bonus_frame?
   end
 
   def score
     score = 0
-    frames.each_with_index do |frame, frame_index |
-      # binding.pry
-      if last_frame? frame_index
-        score += frame.sum
-      elsif spare? frame
-        score += 10 + bonus_frame(frame_index)[0]
-      elsif strike? frame
-        score += 10 + bonus_frame(frame_index).sum
+    roll_index = 0
+    (0...10).each do | _ |
+      if strike? roll_index
+        score += score_frame(roll_index)
+        roll_index += 1
       else
-        score += frame.sum
+        score += score_frame(roll_index)
+        roll_index += 2
       end
     end
     score
   end
 
-  def last_frame? frame_index
-    frame_index == 10
+  def score_frame roll_index
+    if spare?(roll_index) || strike?(roll_index)
+      @rolls[roll_index] + @rolls[roll_index + 1] + @rolls[roll_index + 2]
+    else
+      @rolls[roll_index] + @rolls[roll_index + 1]
+    end
   end
 
-  def bonus_frame frame_index
-    frames[frame_index + 1] || [0, 0]
+  def strike? roll_index
+    @rolls[roll_index] == 10
   end
 
-  def strike? frame
-    frame[0] == 10 && frame.sum == 10
-  end
-
-  def spare? frame
-    frame[0] != 10 && frame.sum == 10
-  end
-
-  def ending_bonus_frame?
-    frames.size == 11
-  end
-
-  def frames
-    @rolls.each_slice(2).to_a
+  def spare? roll_index
+    @rolls[roll_index] + @rolls[roll_index + 1] == 10
   end
 end
