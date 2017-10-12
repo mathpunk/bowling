@@ -1,4 +1,4 @@
-require 'bowling_score'
+require "bowling_score"
 
 describe Bowling do
   before(:each) do
@@ -6,7 +6,7 @@ describe Bowling do
   end
 
   it "scores a gutter game" do
-    20.times {@game.roll 0}
+    20.times { @game.roll 0 }
     expect(@game.score).to eq 0
   end
 
@@ -17,18 +17,20 @@ describe Bowling do
 
   it "scores a spare" do
     2.times { @game.roll 5 }
-    18.times { @game.roll 1 }
-    expect(@game.score).to eq 29
+    @game.roll 1
+    17.times {@game.roll 0}
+    expect(@game.score).to eq 12
   end
 
   it "scores a strike" do
     @game.roll 10
-    18.times { @game.roll 1}
-    expect(@game.score).to eq 30
+    2.times { @game.roll  1}
+    16.times { @game.roll 0 }
+    expect(@game.score).to eq 14
   end
 
   it "scores a perfect game" do
-    12.times {@game.roll 10}
+    12.times { @game.roll 10 }
     expect(@game.score).to eq 300
   end
 end
