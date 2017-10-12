@@ -9,24 +9,17 @@ class Bowling
   end
 
   def score
-    total = 0
+    score = 0
     roll_index = 0
-    frames.each do | frame |
-      total += score_frame(roll_index)
-      roll_index += frame_size roll_index
+    (0...10).each do | _ |
+      score += score_frame(roll_index)
+      if strike? roll_index
+        roll_index += 1
+      else
+        roll_index += 2
+      end
     end
-    total
-  end
-
-  private
-
-  def frames
-    (0...10)
-  end
-
-  def frame_size roll_index
-    return 1 if strike? roll_index
-    2
+    score
   end
 
   def score_frame roll_index
